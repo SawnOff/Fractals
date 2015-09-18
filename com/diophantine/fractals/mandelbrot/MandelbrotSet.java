@@ -16,7 +16,7 @@ public class MandelbrotSet {
 	}
 	
 	public void loadInRect(BinaryPoint point, int width, int height) {
-		// the perpendicular corner of the rect
+		// the opposite corner of the rect
 		BinaryPoint boundPoint = point.copy();
 		boundPoint.addX(width);
 		boundPoint.addY(height);
@@ -37,6 +37,33 @@ public class MandelbrotSet {
 		}
 
 		System.out.println("Done");
+	}
+	
+	public int[][] getArrayInRect(BinaryPoint point, int width, int height) {
+		
+		int[][] array = new int[width][height];
+		// the opposite corner of the rect
+		BinaryPoint boundPoint = point.copy();
+		boundPoint.addX(width);
+		boundPoint.addY(height);
+		
+		int x = 0;
+		int y = 0;
+		
+		System.out.println("About to load " + width*height + " points.");
+		// goes through every point in rect on level
+		for (BinaryPoint loopPoint = point.copy(); loopPoint.lessThanX(boundPoint); 
+				loopPoint.addX(1)) {
+			loopPoint.setBase(loopPoint.baseX(), point.baseY());
+			for (; loopPoint.lessThanY(boundPoint); 
+					loopPoint.addY(1)) {
+				array[x][y] = pointMap.get(loopPoint.toString());
+				y++;
+			}
+			x++;
+		}
+		
+		return array;
 	}
 	
 	// calculates whether a point is in the mandelbrot set
