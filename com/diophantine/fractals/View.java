@@ -41,8 +41,11 @@ public class View {
 		if(Mouse.isButtonDown(0)) {
 			if(!didClickLast) {
 				hasClicked = true;
+				didClickLast = true;
 				clickX = Mouse.getX();
 				clickY = Mouse.getY();
+				
+				System.out.println("Click at " + clickX + "," + clickY);
 			}
 		} else {
 			didClickLast = false;

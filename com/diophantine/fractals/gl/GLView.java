@@ -56,7 +56,7 @@ public class GLView {
             // Do a single loop (logic/render)
             cycle(); 
             // Force a maximum FPS of about 60
-            Display.sync(1);
+            Display.sync(30);
             // Let the CPU synchronize with the GPU if GPU is tagging behind
             Display.update();
         }
@@ -178,8 +178,12 @@ public class GLView {
         				y1 = (y+1-hh)/hh;
         			}
             	}
+            	int r = (0x123456 & pixels[(int) x][(int) y]) >> 16;
+                int g = (0x123456 & pixels[(int) x][(int) y]) >> 8;
+                int b = (0x123456 & pixels[(int) x][(int) y]);
+                System.out.println("RGB " + r + "," + g + "," + b + " from " + String.format("%x", pixels[(int) x][(int) y]) + " at " + ((int) x) + "," + ((int) y));
             	ver.setXYZ(x1, y1, 0f);
-                ver.setRGB((0x123456 & pixels[(int) x][(int) y]) >> 16, (0x123456 & pixels[(int) x][(int) y]) >> 8, (0x123456 & pixels[(int) x][(int) y]));
+                ver.setRGB(r, g, b);
                 v.add(ver);
 			}
 		}
