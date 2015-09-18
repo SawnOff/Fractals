@@ -46,7 +46,7 @@ public class GLView {
         }
         
         initGL();
-        initLogic();
+        //initLogic();
 	}
 	
 	public void start(Runnable code) {

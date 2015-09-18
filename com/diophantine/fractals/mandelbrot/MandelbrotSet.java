@@ -28,10 +28,10 @@ public class MandelbrotSet {
 		
 		System.out.println("About to load " + width*height + " points.");
 		// goes through every point in rect on level
-		for (BinaryPoint loopPoint = point.copy(); loopPoint.lessThanX(boundPoint); 
+		for (BinaryPoint loopPoint = point.copy(); loopPoint.lessThanOrEqualX(boundPoint); 
 				loopPoint.addX(1)) {
 			loopPoint.setBase(loopPoint.baseX(), point.baseY());
-			for (; loopPoint.lessThanY(boundPoint); 
+			for (; loopPoint.lessThanOrEqualY(boundPoint); 
 					loopPoint.addY(1)) {
 				// gets correct point level
 				BinaryPoint p = loopPoint;
@@ -45,7 +45,6 @@ public class MandelbrotSet {
 	}
 	
 	public int[][] getArrayInRect(BinaryPoint point, int width, int height) {
-		
 		int[][] array = new int[width][height];
 		// the opposite corner of the rect
 		BinaryPoint boundPoint = point.copy();
@@ -57,11 +56,16 @@ public class MandelbrotSet {
 		
 		System.out.println("About to load " + width*height + " points.");
 		// goes through every point in rect on level
-		for (BinaryPoint loopPoint = point.copy(); loopPoint.lessThanX(boundPoint); 
+		for (BinaryPoint loopPoint = point.copy(); loopPoint.lessThanOrEqualX(boundPoint); 
 				loopPoint.addX(1)) {
 			loopPoint.setBase(loopPoint.baseX(), point.baseY());
-			for (; loopPoint.lessThanY(boundPoint); 
+			for (; loopPoint.lessThanOrEqualY(boundPoint); 
 					loopPoint.addY(1)) {
+				if (pointMap.containsKey(loopPoint.toString())) {
+					System.out.println("Whoops");
+				} else {
+					System.out.println("yay");
+				}
 				array[x][y] = pointMap.get(loopPoint.toString());
 				y++;
 			}

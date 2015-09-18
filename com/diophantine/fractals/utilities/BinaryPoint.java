@@ -135,20 +135,20 @@ public class BinaryPoint {
 	}
 	
 	// compares x with x of other point
-	public boolean lessThanX(BinaryPoint p) {
-		if (baseX < p.baseX()) return true;
+	public boolean lessThanOrEqualX(BinaryPoint p) {
+		if (baseX <= p.baseX()) return true;
 		else if (baseX > p.baseX()) return false;
 		
-		if (x < p.x()) return true;
+		if (x <= p.x()) return true;
 		else return false;
 	}
 	
 	// compares y with y of other point
-	public boolean lessThanY(BinaryPoint p) {
-		if (baseY < p.baseY()) return true;
+	public boolean lessThanOrEqualY(BinaryPoint p) {
+		if (baseY <= p.baseY()) return true;
 		else if (baseY > p.baseY()) return false;
 		
-		if (y < p.y()) return true;
+		if (y <= p.y()) return true;
 		else return false;
 	}
 	
