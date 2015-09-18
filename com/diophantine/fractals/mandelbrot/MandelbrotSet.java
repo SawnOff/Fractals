@@ -8,6 +8,7 @@ import com.diophantine.fractals.utilities.Complex;
 public class MandelbrotSet {
 	
 	HashMap<String, Integer> pointMap;
+	static int maxColour = 33554432;
 	static int maxMod = 1000;
 	static int maxIter = 1000;
 	
@@ -86,7 +87,7 @@ public class MandelbrotSet {
 			z = z.pow(2).add(c);
 			// if the modulus is larger than maxMod than assume it's diverging
 			if (z.mod() < maxMod) {
-				value = iter;
+				value = (int) (iter * (maxColour/((float) maxIter)));
 			}
 		}
 		
