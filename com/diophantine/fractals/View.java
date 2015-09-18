@@ -6,6 +6,9 @@ import com.diophantine.fractals.gl.GLView;
 public class View {
 
     private GLView glView;
+    
+    public boolean hasClicked;
+    public int clickX, clickY;
 
 	public View(final String title, int w, int h) {
 		GLAttributes attr = new GLAttributes();
@@ -27,6 +30,10 @@ public class View {
 	}
 	
 	public void updatePixels(int[][] pixels) {
+		
+	}
+	
+	public void updateClickData() {
 		
 	}
 	
