@@ -66,6 +66,7 @@ public class MandelbrotSet {
 				if (!pointMap.containsKey(loopPoint.toString())) {
 					System.out.println("Whoops");
 				}
+				// adds value to array
 				array[x][y] = pointMap.get(loopPoint.toString());
 				y++;
 			}
@@ -92,6 +93,7 @@ public class MandelbrotSet {
 			z = z.pow(2).add(c);
 			// if the modulus is larger than maxMod than assume it's diverging
 			if (z.mod() < maxMod) {
+				//value = (int) (Math.random() * maxColour);
 				value = (int) (iter * (maxColour/((float) maxIter)));
 				//value = 13000;
 			}
