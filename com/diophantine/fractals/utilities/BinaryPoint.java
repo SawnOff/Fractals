@@ -205,6 +205,14 @@ public class BinaryPoint {
 		return b;
 	}
 	
+	private static String longToString(long l) {
+		String s;
+		//String lString = Integer.parseInt(Long.toBinaryString(l), 2);
+		
+		//s += lString.subSequence(0, 7);
+		return null;
+	}
+	
 	// copier
 	public BinaryPoint copy() {
 		return new BinaryPoint(this.baseX, this.baseY, this.x, this.y);

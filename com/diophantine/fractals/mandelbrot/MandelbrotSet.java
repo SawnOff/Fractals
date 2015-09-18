@@ -8,7 +8,7 @@ import com.diophantine.fractals.utilities.Complex;
 public class MandelbrotSet {
 	
 	HashMap<String, Integer> pointMap;
-	static int maxColour = 33554432;
+	static int maxColour = 33554431;
 	static int maxMod = 1000;
 	static int maxIter = 1000;
 	
