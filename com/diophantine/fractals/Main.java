@@ -16,6 +16,8 @@ public class Main {
     	
         View view = new View("Fractals", 320, 320);
         
+        view.updatePixels(pixels);
+        
         view.run(new Runnable() {
         	public void run() {
         		// Update code

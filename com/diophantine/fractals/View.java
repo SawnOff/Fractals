@@ -1,5 +1,7 @@
 package com.diophantine.fractals;
 
+import org.lwjgl.input.Mouse;
+
 import com.diophantine.fractals.gl.GLAttributes;
 import com.diophantine.fractals.gl.GLView;
 
@@ -7,6 +9,7 @@ public class View {
 
     private GLView glView;
     
+    private boolean didClickLast;
     public boolean hasClicked;
     public int clickX, clickY;
 
@@ -18,7 +21,7 @@ public class View {
 		attr.WIDTH = w;
 		attr.HEIGHT = h;
 		
-		glView = new GLView(attr);
+		glView = new GLView(attr, this);
 	}
 	
 	public void run(Runnable r) {
@@ -30,11 +33,20 @@ public class View {
 	}
 	
 	public void updatePixels(int[][] pixels) {
-		
+		glView.setPixels(pixels);
 	}
 	
 	public void updateClickData() {
-		
+		hasClicked = false;
+		if(Mouse.isButtonDown(0)) {
+			if(!didClickLast) {
+				hasClicked = true;
+				clickX = Mouse.getX();
+				clickY = Mouse.getY();
+			}
+		} else {
+			didClickLast = false;
+		}
 	}
 	
 }

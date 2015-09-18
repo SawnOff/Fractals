@@ -16,14 +16,18 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.PixelFormat;
 
+import com.diophantine.fractals.View;
+
 public class GLView {
 	private GLAttributes A;
+	private View v;
 	
 	//private ByteBuffer vertexByteBuffer;
 	
-	//private int[][] data;
+	private int[][] pixels;
 
-	public GLView(GLAttributes attributes) {
+	public GLView(GLAttributes attributes, View v) {
+		this.v = v;
 	    A = attributes;
 		
 	    //data = new int[A.WIDTH][A.HEIGHT];
@@ -47,6 +51,7 @@ public class GLView {
 	
 	public void start(Runnable code) {
 		while (!Display.isCloseRequested()) {
+			v.updateClickData();
         	code.run();
             // Do a single loop (logic/render)
             cycle(); 
@@ -85,6 +90,7 @@ public class GLView {
 	}
 	
 	private void cycle() {
+		
 		/*
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, A.VBO_ID);
 		 
@@ -131,16 +137,13 @@ public class GLView {
         GL30.glBindVertexArray(0);
 	}
 	
-	private void initLogic() {
-        // GENERATING MESS
-        Vertex[] vertices = new Vertex[A.WIDTH * A.HEIGHT]; 
-        ArrayList<Vertex> v = new ArrayList<Vertex>();
-        
-        float hh = A.HEIGHT / 2;
+	private void initLogic() {		
+		Vertex[] vertices = new Vertex[A.WIDTH * A.HEIGHT]; 
+		ArrayList<Vertex> v = new ArrayList<Vertex>();
+		float hh = A.HEIGHT / 2;
         float hw = A.WIDTH / 2;
-        int color = 0;
-        for(float x = 0; x < A.WIDTH; x++) {
-            for(float y = 0; y < A.HEIGHT; y++) {
+		for(float x = 0; x < pixels.length; x++) {
+			for(float y = 0; y < pixels[(int) x].length; y++) {
             	float x1 = 0;
             	float y1 = 0;
             	Vertex ver = new Vertex();
@@ -176,21 +179,14 @@ public class GLView {
         			}
             	}
             	ver.setXYZ(x1, y1, 0f);
-            	
-            	ver.setRGB(color == 0 ? 1.0f : 0f , color == 1 ? 1.0f : 0f, color == 2 ? 1.0f : 0f);
-            	if(color == 2) {
-            		color = 0;
-            	} else {
-            		color++;
-            	}
-            	v.add(ver);
-            }
-        }
-        
-        for(Vertex ver5: v) {
+                ver.setRGB((0x123456 & pixels[(int) x][(int) y]) >> 16, (0x123456 & pixels[(int) x][(int) y]) >> 8, (0x123456 & pixels[(int) x][(int) y]));
+                v.add(ver);
+			}
+		}
+		
+		for(Vertex ver5: v) {
         	vertices[v.indexOf(ver5)] = ver5;
         }
-        // /GENERATING MESS
 
         A.VERTEX_COUNT = vertices.length;
         FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length *
@@ -240,6 +236,9 @@ public class GLView {
         GLUtil.glExitError("Error setting up GL context and program");
 	}
 
+	public void setPixels(int[][] data) {
+		this.pixels = data;
+	}
 
 }
 
