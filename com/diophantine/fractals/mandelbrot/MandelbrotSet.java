@@ -30,6 +30,7 @@ public class MandelbrotSet {
 		// goes through every point in rect on level
 		for (BinaryPoint loopPoint = point.copy(); loopPoint.lessThanX(boundPoint); 
 				loopPoint.addX(1)) {
+			//System.out.println(loopPoint + " " + boundPoint + " " + loopPoint.lessThanX(boundPoint));
 			loopPoint.setBase(loopPoint.baseX(), point.baseY());
 			for (; loopPoint.lessThanY(boundPoint); 
 					loopPoint.addY(1)) {
@@ -50,21 +51,20 @@ public class MandelbrotSet {
 		BinaryPoint boundPoint = point.copy();
 		boundPoint.addX(width);
 		boundPoint.addY(height);
+		System.out.println(point + " " + boundPoint);
 		
 		int x = 0;
 		int y = 0;
 		
-		System.out.println("About to load " + width*height + " points.");
 		// goes through every point in rect on level
-		for (BinaryPoint loopPoint = point.copy(); loopPoint.lessThanX(boundPoint); 
+		for (BinaryPoint loopPoint = point.copy(); x < width; 
 				loopPoint.addX(1)) {
 			loopPoint.setBase(loopPoint.baseX(), point.baseY());
-			for (; loopPoint.lessThanY(boundPoint); 
+			y = 0;
+			for (; y < height; 
 					loopPoint.addY(1)) {
-				if (pointMap.containsKey(loopPoint.toString())) {
+				if (!pointMap.containsKey(loopPoint.toString())) {
 					System.out.println("Whoops");
-				} else {
-					System.out.println("yay");
 				}
 				array[x][y] = pointMap.get(loopPoint.toString());
 				y++;
@@ -82,6 +82,7 @@ public class MandelbrotSet {
 
 		float c = 1;
 		Complex z = new Complex(p.cartX(), p.cartY());
+		//System.out.println(z);
 		
 		int value = 0;
 		
@@ -92,6 +93,7 @@ public class MandelbrotSet {
 			// if the modulus is larger than maxMod than assume it's diverging
 			if (z.mod() < maxMod) {
 				value = (int) (iter * (maxColour/((float) maxIter)));
+				//value = 13000;
 			}
 		}
 		

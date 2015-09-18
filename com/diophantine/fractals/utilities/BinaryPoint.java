@@ -94,7 +94,7 @@ public class BinaryPoint {
 			}
 		}
 		
-		return baseX + dec;
+		return baseX/Math.pow(10, baseDecLevel) + dec;
 	}
 	
 	// converts binary y to Cartesian y
@@ -107,7 +107,7 @@ public class BinaryPoint {
 			}
 		}
 		
-		return baseY + dec;
+		return baseY/Math.pow(10, baseDecLevel) + dec;
 	}
 	
 	// adds to x along same level
@@ -118,8 +118,12 @@ public class BinaryPoint {
 		int max = (int) Math.pow(2, level);
 		
 		// increases base if exceeds level max
-		x = (noFlag + a) % max + max;
-		baseX += Math.floor((noFlag + a) / max);
+		if (level != 0) {
+			x = (noFlag + a) % max + max;
+			baseX += Math.floor((noFlag + a) / max);
+		} else {
+			baseX += a;
+		}
 	}
 	
 	// adds to y along same level
@@ -130,8 +134,12 @@ public class BinaryPoint {
 		int max = (int) Math.pow(2, level);
 		
 		// increases base if exceeds level max
-		y = (noFlag + a) % max + max;
-		baseY += Math.floor((noFlag + a) / max);
+		if (level != 0) {
+			y = (noFlag + a) % max + max;
+			baseY += Math.floor((noFlag + a) / max);
+		} else {
+			baseY += a;
+		}
 	}
 	
 	// compares x with x of other point

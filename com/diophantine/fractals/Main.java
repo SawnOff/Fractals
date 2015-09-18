@@ -16,11 +16,11 @@ public class Main {
     	BinaryPoint b = new BinaryPoint(0b101, 0b100);
     	System.out.println(b + " " + b.minPointLevel());
         
-        BinaryPoint p = new BinaryPoint();
+        BinaryPoint p = new BinaryPoint(-2.0, -2.0, 1, 1);
         m.loadInRect(p, width, height);
     	
         View view = new View("Fractals", width, height);
-        view.updatePixels(m.getArrayInRect(new BinaryPoint(), width, height));
+        view.updatePixels(m.getArrayInRect(p, width, height));
         
         view.run(new Runnable() {
         	public void run() {
