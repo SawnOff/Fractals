@@ -1,4 +1,4 @@
-package gl;
+package com.diophantine.fractals.gl;
 
 import static org.lwjgl.opengl.GL20.glCreateProgram;
 

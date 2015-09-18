@@ -1,4 +1,4 @@
-package gl;
+package com.diophantine.fractals.gl;
 
 public class Vertex {
 

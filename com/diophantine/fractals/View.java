@@ -1,7 +1,7 @@
-package com.fractals;
+package com.diophantine.fractals;
 
-import gl.GLAttributes;
-import gl.GLView;
+import com.diophantine.fractals.gl.GLAttributes;
+import com.diophantine.fractals.gl.GLView;
 
 public class View {
 
