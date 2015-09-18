@@ -46,10 +46,10 @@ public class GLView {
         }
         
         initGL();
-        //initLogic();
 	}
 	
 	public void start(Runnable code) {
+        initLogic();
 		while (!Display.isCloseRequested()) {
 			v.updateClickData();
         	code.run();
