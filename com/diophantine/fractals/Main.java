@@ -1,8 +1,19 @@
 package com.diophantine.fractals;
- 
-public class Main {
 
+import com.diophantine.fractals.mandelbrot.MandelbrotSet;
+import com.diophantine.fractals.utilities.BinaryPoint;
+
+public class Main {
+	
+	static MandelbrotSet m;
+	
     public static void main(String[] args) {
+    	
+    	m = new MandelbrotSet();
+    	
+    	BinaryPoint b = new BinaryPoint(0b101, 0b100);
+    	System.out.println(b + " " + b.minPointLevel());
+    	
         View view = new View("Fractals", 320, 320);
         
         view.run(new Runnable() {

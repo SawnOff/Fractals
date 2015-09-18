@@ -11,8 +11,12 @@ public class MandelbrotSet {
 	static int maxMod = 1000;
 	static int maxIter = 1000;
 	
+	private int level = 0;
+	private BinaryPoint b;
+	
 	public MandelbrotSet() {
 		pointMap = new HashMap<String, Integer>();
+		b = new BinaryPoint();
 	}
 	
 	public void loadInRect(BinaryPoint point, int width, int height) {
@@ -88,5 +92,14 @@ public class MandelbrotSet {
 		
 		// adds point to map
 		pointMap.put(p.toString(), value);
+	}
+	
+	// getters
+	public BinaryPoint getCorner() {
+		return b;
+	}
+	
+	public int getLevel () {
+		return level;
 	}
 }

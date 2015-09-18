@@ -5,8 +5,8 @@ public class BinaryPoint {
 	int baseX;
 	int baseY;
 	
-	int x;
-	int y;
+	long x;
+	long y;
 	
 	static int baseDecLevel = 2;
 	
@@ -19,7 +19,7 @@ public class BinaryPoint {
 		baseY = 0;
 	}
 	
-	public BinaryPoint(int baseX, int baseY, int x, int y) {
+	public BinaryPoint(int baseX, int baseY, long x, long y) {
 		this.baseX = baseX;
 		this.baseY = baseY;
 		
@@ -27,12 +27,12 @@ public class BinaryPoint {
 		this.y = y;
 		
 		// if the numbers have a different number of binary digits it makes them have the same
-		if (Integer.toBinaryString(x).length() != Integer.toBinaryString(y).length()) {
+		if (Long.toBinaryString(x).length() != Long.toBinaryString(y).length()) {
 			this.setLevel(maxPointLevel());
 		}
 	}
 	
-	public BinaryPoint(double baseX, double baseY, int x, int y) {
+	public BinaryPoint(double baseX, double baseY, long x, long y) {
 		this.baseX = (int) Math.floor(baseX * Math.pow(10, baseDecLevel));
 		this.baseY = (int) Math.floor(baseY * Math.pow(10, baseDecLevel));
 		
@@ -40,7 +40,7 @@ public class BinaryPoint {
 		this.y = y;
 		
 		// if the numbers have a different number of binary digits it makes them have the same
-		if (Integer.toBinaryString(x).length() != Integer.toBinaryString(y).length()) {
+		if (Long.toBinaryString(x).length() != Long.toBinaryString(y).length()) {
 			this.setLevel(maxPointLevel());
 		}
 	}
@@ -61,16 +61,16 @@ public class BinaryPoint {
 	// returns smallest level
 	public int minPointLevel() {
 		// removes as many zeros from right as possible if common amongst x and y
-		int xLevel = Integer.toBinaryString(x).lastIndexOf('1');
-		int yLevel = Integer.toBinaryString(y).lastIndexOf('1');
+		int xLevel = Long.toBinaryString(x).lastIndexOf('1');
+		int yLevel = Long.toBinaryString(y).lastIndexOf('1');
 		
 		return xLevel > yLevel ? xLevel : yLevel;
 	}
 
 	// returns largest number of binary digits between x and y length
 	public int maxPointLevel() {
-		int xLevel = Integer.toBinaryString(x).length() - 1;
-		int yLevel = Integer.toBinaryString(y).length() - 1;
+		int xLevel = Long.toBinaryString(x).length() - 1;
+		int yLevel = Long.toBinaryString(y).length() - 1;
 		
 		return xLevel > yLevel ? xLevel : yLevel;
 	}
@@ -78,15 +78,15 @@ public class BinaryPoint {
 	// creates same binary point but with a certain level
 	public void setLevel(int l) {
 		// divides it by a power of two depending on the requested level and current level
-		double xDivisor = Math.pow(2, Integer.toBinaryString(x).length() - 1 - l);
-		double yDivisor = Math.pow(2, Integer.toBinaryString(y).length() - 1 - l);
+		double xDivisor = Math.pow(2, Long.toBinaryString(x).length() - 1 - l);
+		double yDivisor = Math.pow(2, Long.toBinaryString(y).length() - 1 - l);
 		x = (int) Math.floor(x/xDivisor);
 		y = (int) Math.floor(y/yDivisor);
 	}
 	
 	// converts binary x to Cartesian x
 	public double cartX() {
-		String xS = Integer.toBinaryString(x);
+		String xS = Long.toBinaryString(x);
 		double dec = 0;
 		for (int i = 1; i < xS.length(); i++) {
 			if (xS.charAt(i) == '1') {
@@ -99,7 +99,7 @@ public class BinaryPoint {
 	
 	// converts binary y to Cartesian y
 	public double cartY() {
-		String yS = Integer.toBinaryString(y);
+		String yS = Long.toBinaryString(y);
 		double dec = 0;
 		for (int i = 1; i < yS.length(); i++) {
 			if (yS.charAt(i) == '1') {
@@ -112,7 +112,7 @@ public class BinaryPoint {
 	
 	// adds to x along same level
 	public void addX(int a) {
-		int level = Integer.toBinaryString(x).length() - 1;
+		int level = Long.toBinaryString(x).length() - 1;
 		// removes flag from x
 		int noFlag = (int) (x - Math.pow(2, level));
 		int max = (int) Math.pow(2, level);
@@ -124,7 +124,7 @@ public class BinaryPoint {
 	
 	// adds to y along same level
 	public void addY(int a) {
-		int level = Integer.toBinaryString(y).length() - 1;
+		int level = Long.toBinaryString(y).length() - 1;
 		// removes flag from y
 		int noFlag = (int) (y - Math.pow(2, level));
 		int max = (int) Math.pow(2, level);
@@ -160,21 +160,21 @@ public class BinaryPoint {
 	public int baseY() {
 		return baseY;
 	}
-	public int x() {
+	public long x() {
 		return x;
 	}
 	
-	public int y() {
+	public long y() {
 		return y;
 	}
 	
 	// setter
-	public void setBin(int x, int y) {
+	public void setBin(long x, long y) {
 		this.x = x;
 		this.y = y;
 		
 		// if the numbers have a different number of binary digits it makes them have the same
-		if (Integer.toBinaryString(x).length() != Integer.toBinaryString(y).length()) {
+		if (Long.toBinaryString(x).length() != Long.toBinaryString(y).length()) {
 			this.setLevel(maxPointLevel());
 		}
 	}
@@ -186,20 +186,22 @@ public class BinaryPoint {
 	
 	// for test purposes
 	public String toString() {
-		String binary = "(" + Integer.toBinaryString(x) + ", " + Integer.toBinaryString(y) + ")";
+		String binary = "(" + Long.toBinaryString(x) + ", " + Long.toBinaryString(y) + ")";
 		String base = "(" + baseX/Math.pow(10, baseDecLevel) + ", " + baseY/Math.pow(10, baseDecLevel) + ")";
 		return binary + " at base " + base;
 	}
 	
 	// creates string that represents coordinate
 	public String hashString() {
-		String hash = String.valueOf(x) + ";" + String.valueOf(y);
+		String hash = String.valueOf(baseX) + ";" + String.valueOf(baseY) 
+		+ ";" + String.valueOf(x) + ";" + String.valueOf(y);
 		return hash;
 	}
 	
 	public static BinaryPoint hashToBinaryPoint(String hash) {
 		String[] p = hash.split(";");
-		BinaryPoint b = new BinaryPoint(Integer.parseInt(p[0]), Integer.parseInt(p[1]));
+		BinaryPoint b = new BinaryPoint(Integer.parseInt(p[0]), Integer.parseInt(p[1]),
+				Long.parseLong(p[2]), Long.parseLong(p[3]));
 		return b;
 	}
 	
