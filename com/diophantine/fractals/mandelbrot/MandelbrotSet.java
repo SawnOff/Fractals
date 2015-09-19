@@ -126,14 +126,20 @@ public class MandelbrotSet {
 		return array;
 	}
 	
-	public BinaryPoint locationToBP(BinaryPoint b, int width, int height, int x, int y) {
+	public BinaryPoint clickToZoomPoint(BinaryPoint point, int width, int height, int x, int y) {
+		BinaryPoint b = point.copy();
 		if (x - width / 4 < 0) x = width / 4;
 		else if (x + width / 4 > width) x = width - width / 4;
 		
 		if (y - height / 4 < 0) x = height / 4;
 		else if (x + height / 4 > height) x = height - height / 4;
 		
+		b.addX(x);
+		b.addY(y);
 		
+		b.setLevel(b.minPointLevel() + 1);
+		
+		return b;
 	}
 	
 	// getters

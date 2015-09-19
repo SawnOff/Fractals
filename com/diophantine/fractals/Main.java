@@ -29,9 +29,10 @@ public class Main {
         view.run(new Runnable() {
         	public void run() {
         		if(view.hasClicked) {
-        			int colour = new Color((float) Math.random(), (float) Math.random(), (float) Math.random()).getRGB();
+        			/*int colour = new Color((float) Math.random(), (float) Math.random(), (float) Math.random()).getRGB();
         			System.out.println(Integer.toHexString(colour));
-        			view.updatePixels(GLUtil.solidColour(width, height, colour));
+        			view.updatePixels(GLUtil.solidColour(width, height, colour));*/
+        			m.loadInRect(m.clickToZoomPoint(p, width, height, view.clickX, view.clickY), width, height);
         		}
         		
         		/*
