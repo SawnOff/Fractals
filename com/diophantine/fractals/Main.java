@@ -11,6 +11,7 @@ public class Main {
 	static MandelbrotSet m;
 	static int width = 640;
 	static int height = 640;
+	static BinaryPoint p;
 	
     public static void main(String[] args) {
     	
@@ -19,7 +20,7 @@ public class Main {
     	BinaryPoint b = new BinaryPoint(0b101, 0b100);
     	System.out.println(b + " " + b.minPointLevel());
         
-        BinaryPoint p = new BinaryPoint(-2.0, -1.5, 1, 1);
+        p = new BinaryPoint(-2.0, -1.5, 1, 1);
         m.loadInRect(p, width, height);
     	
         View view = new View("Fractals", width, height);
@@ -32,7 +33,9 @@ public class Main {
         			/*int colour = new Color((float) Math.random(), (float) Math.random(), (float) Math.random()).getRGB();
         			System.out.println(Integer.toHexString(colour));
         			view.updatePixels(GLUtil.solidColour(width, height, colour));*/
-        			m.loadInRect(m.clickToZoomPoint(p, width, height, view.clickX, view.clickY), width, height);
+        			p = m.clickToZoomPoint(p, width, height, view.clickX, view.clickY);
+        			m.loadInRect(p, width, height);
+        			view.updatePixels(m.getArrayInRect(p, width, height));
         		}
         		
         		/*
