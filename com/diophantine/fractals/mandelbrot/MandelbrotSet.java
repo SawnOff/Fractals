@@ -11,7 +11,7 @@ public class MandelbrotSet {
 	HashMap<String, Integer> pointMap;
 	static int maxColour = 33554431;
 	static double maxMod = 2;
-	static int maxIter = 600;
+	static int maxIter = 500;
 	
 	ArrayList colours;
 	
@@ -39,7 +39,7 @@ public class MandelbrotSet {
 					loopPoint.addY(1)) {
 				// gets correct point level
 				BinaryPoint p = loopPoint.copy();
-				//p.setLevel(p.minPointLevel());
+				p.setLevel(p.minPointLevel());
 				
 				// calculates whether it's in the set
 				calculatePoint(p);
@@ -69,7 +69,7 @@ public class MandelbrotSet {
 					loopPoint.addY(1)) {
 				
 				BinaryPoint p = loopPoint.copy();
-				//p.setLevel(p.minPointLevel());
+				p.setLevel(p.minPointLevel());
 				
 				if (!pointMap.containsKey(p.toString())) {
 					System.out.println("Whoops");
@@ -93,14 +93,14 @@ public class MandelbrotSet {
 		Complex z = new Complex();
 		
 		int value = 0;
-		//if (p.cartX() > -1) value = 1000;
+		
 		// iterates through z(n+1) = zn^2 + c with z0 = z
 		// stops iterating after max iterations and assumes it's converging
 		for (int iter = 0; iter <= maxIter; iter++) {
 			z = z.pow(2).add(c);
 			// if the modulus is larger than maxMod than assume it's diverging
 			if (z.mod() > maxMod) {
-				value = (int) (((double) iter) * (((double) maxColour)/((double) maxIter)));
+				value = (int) ((maxIter - iter) * (((double) maxColour)/((double) maxIter)));
 				if (!colours.contains(value)) colours.add(value);
 			}
 		}

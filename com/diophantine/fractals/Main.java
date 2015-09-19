@@ -14,7 +14,7 @@ public class Main {
     	
     	m = new MandelbrotSet();
         
-        p = new BinaryPoint((-width/2)/100.0, (-height/2)/100, 1, 1);
+        p = new BinaryPoint((-width/2)/100.0 - 1.0, (-height/3)/100, 1, 1);
         m.loadInRect(p, width, height);
     	
         View view = new View("Fractals", width, height);
