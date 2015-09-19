@@ -1,5 +1,6 @@
 package com.diophantine.fractals;
 
+import com.diophantine.fractals.gl.GLUtil;
 import com.diophantine.fractals.mandelbrot.MandelbrotSet;
 import com.diophantine.fractals.utilities.BinaryPoint;
 
@@ -24,16 +25,20 @@ public class Main {
         
         view.run(new Runnable() {
         	public void run() {
-        		// Update code
+        		if(view.hasClicked) {
+        			view.updatePixels(GLUtil.randomColours(width, height));
+        		}
         		
+        		/*
+        		 * Example Usage
+        		 * 
         		boolean hasClicked = view.hasClicked;
         		if(hasClicked) {
         			int x = view.clickX;
         			int y = view.clickY;
         		}
-        		
-        		// if needs updating
-        		// view.updatePixels(int[][] array);
+        		view.updatePixels(array)
+        		*/
         		
         	}
         });

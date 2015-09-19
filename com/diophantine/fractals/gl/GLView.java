@@ -2,8 +2,8 @@ package com.diophantine.fractals.gl;
 
 import static org.lwjgl.opengl.GL20.glCreateProgram;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -20,17 +20,23 @@ import com.diophantine.fractals.View;
 
 public class GLView {
 	private GLAttributes A;
+	
 	private View v;
-	
-	//private ByteBuffer vertexByteBuffer;
-	
+
+	private boolean needsUpdate = false;
 	private int[][] pixels;
+	private ByteBuffer vertexByteBuffer;
+	
+	public static final int VERTEX_STRIDE = 32;
+    public static final int ELEMENT_COUNT = 8;   
+    public static final int ELEMENT_BYTES = 4;
+    public static final int SIZE_IN_BYTES = ELEMENT_BYTES * ELEMENT_COUNT;
 
 	public GLView(GLAttributes attributes, View v) {
 		this.v = v;
 	    A = attributes;
-		
-	    //data = new int[A.WIDTH][A.HEIGHT];
+	    
+	    pixels = new int[A.WIDTH][A.HEIGHT];
 	    
         try {
             PixelFormat pixelFormat = new PixelFormat();
@@ -65,24 +71,17 @@ public class GLView {
 	public void cleanup() {
         GL20.glDisableVertexAttribArray(0);
         
-        // Delete the shaders
+        // Deleting vertex/fragment shader, VBO, color VBO and VAO
         GL20.glUseProgram(0);
         GL20.glDetachShader(A.PROGRAM_ID, A.VERTEX_SHADER_ID);
         GL20.glDetachShader(A.PROGRAM_ID, A.FRAGMENT_SHADER_ID);
-         
         GL20.glDeleteShader(A.VERTEX_SHADER_ID);
         GL20.glDeleteShader(A.FRAGMENT_SHADER_ID);
         GL20.glDeleteProgram(A.PROGRAM_ID);
-        
-        // Delete the VBO
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
         GL15.glDeleteBuffers(A.VBO_ID);
-        
-        // Delete the color VBO
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
         GL15.glDeleteBuffers(A.VBOC_ID);
-         
-        // Delete the VAO
         GL30.glBindVertexArray(0);
         GL30.glDeleteVertexArrays(A.VAO_ID);
          
@@ -90,40 +89,25 @@ public class GLView {
 	}
 	
 	private void cycle() {
-		
-		/*
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, A.VBO_ID);
-		 
-
-		for (int i = 0; i < vertices.length; i++) {
-		    Vertex vertex = vertices[i];
-		     
-
-		    float offsetX = (float) (Math.cos(Math.PI * Math.random()) * 0.1);
-		    float offsetY = (float) (Math.sin(Math.PI * Math.random()) * 0.1);
-		     
-
-		    float[] xyz = vertex.getXYZW();
-		    vertex.setXYZ(xyz[0] + offsetX, xyz[1] + offsetY, xyz[2]);
-		     
-
-		    FloatBuffer vertexFloatBuffer = vertexByteBuffer.asFloatBuffer();
-		    vertexFloatBuffer.rewind();
-		    vertexFloatBuffer.put(vertex.getXYZW());
-		    vertexFloatBuffer.put(vertex.getRGBA());
-		    vertexFloatBuffer.flip();
-		     
-		    GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, i * 32, 
-		            vertexByteBuffer);
-
-		    //vertex.setXYZ(xyz[0], xyz[1], xyz[2]);
+		if(needsUpdate) {
+			needsUpdate = false;
+			
+			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, A.VBO_ID);
+			
+			for(float x = 0; x < A.WIDTH; x++) {
+				for(float y = 0; y < A.HEIGHT; y++) {
+					FloatBuffer verFloatBuffer = vertexByteBuffer.asFloatBuffer();
+					verFloatBuffer.rewind();
+					GLUtil.glSetBuffer(x, y, (float) A.HEIGHT / 2, (float) A.WIDTH / 2, pixels[(int) x][(int) y], verFloatBuffer);
+					verFloatBuffer.flip();
+					
+					GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, (long) ((x * A.WIDTH) + y) * VERTEX_STRIDE, vertexByteBuffer);
+				}
+			}
+			
+			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		}
-		 
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-	   */
-		
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-
+       
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
         GL30.glBindVertexArray(A.VAO_ID);
@@ -137,82 +121,23 @@ public class GLView {
         GL30.glBindVertexArray(0);
 	}
 	
-	private void initLogic() {		
-		Vertex[] vertices = new Vertex[A.WIDTH * A.HEIGHT]; 
-		ArrayList<Vertex> v = new ArrayList<Vertex>();
-		float hh = A.HEIGHT / 2;
-        float hw = A.WIDTH / 2;
-		for(float x = 0; x < pixels.length; x++) {
-			for(float y = 0; y < pixels[(int) x].length; y++) {
-            	float x1 = 0;
-            	float y1 = 0;
-            	Vertex ver = new Vertex();
-            	if((x+1) == hw) {
-            		if((y+1) == hh) {
-            			x1 = 0f;
-            			y1 = 0f;
-            		} else {
-            			x1 = 0f;
-            			if((y+1) < hh) {
-            				y1 = -(y+1)/hh;
-            			} else {
-            				y1 = (y+1-hh)/hh;
-            			}
-            		}
-            	} else if((y+1) == hh) {
-            		y1 = 0;
-            		if((x+1) > hw) {
-            			x1 = (x+1-hw)/hw;
-            		} else {
-            			x1 = -(x+1)/hw;
-            		}
-            	} else {
-            		if((x+1) > hw) {
-            			x1 = (x+1-hw)/hw;
-            		} else {
-            			x1 = -(x+1)/hw;
-            		}
-            		if((y+1) < hh) {
-        				y1 = -(y+1)/hh;
-        			} else {
-        				y1 = (y+1-hh)/hh;
-        			}
-            	}
-            	int r = (0x123456 & pixels[(int) x][(int) y]) >> 16;
-                int g = (0x123456 & pixels[(int) x][(int) y]) >> 8;
-                int b = (0x123456 & pixels[(int) x][(int) y]);
-                System.out.println("RGB " + r + "," + g + "," + b + " from " + String.format("%x", pixels[(int) x][(int) y]) + " at " + ((int) x) + "," + ((int) y));
-            	ver.setXYZ(x1, y1, 0f);
-                ver.setRGB(r, g, b);
-                v.add(ver);
-			}
-		}
+	private void initLogic() {	
+		A.VERTEX_COUNT = A.WIDTH * A.HEIGHT;
+		FloatBuffer verticesBuffer = GLUtil.glCartesianBuffer(GLUtil.randomColours(A.WIDTH, A.HEIGHT), ELEMENT_COUNT);
 		
-		for(Vertex ver5: v) {
-        	vertices[v.indexOf(ver5)] = ver5;
-        }
-
-        A.VERTEX_COUNT = vertices.length;
-        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length *
-                Vertex.elementCount);
-        for (int i = 0; i < vertices.length; i++) {
-            verticesBuffer.put(vertices[i].getXYZW());
-            verticesBuffer.put(vertices[i].getRGBA());
-            
-        }
-        verticesBuffer.flip();
+		vertexByteBuffer = BufferUtils.createByteBuffer(VERTEX_STRIDE);
 
         A.VAO_ID = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(A.VAO_ID);
 
         A.VBO_ID = GL15.glGenBuffers();
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, A.VBO_ID);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STREAM_DRAW);
 
-        GL20.glVertexAttribPointer(0, 4, GL11.GL_FLOAT, false, Vertex.sizeInBytes, 0);
+        GL20.glVertexAttribPointer(0, 4, GL11.GL_FLOAT, false, SIZE_IN_BYTES, 0);
 
-        GL20.glVertexAttribPointer(1, 4, GL11.GL_FLOAT, false, Vertex.sizeInBytes, 
-                Vertex.elementBytes * 4);
+        GL20.glVertexAttribPointer(1, 4, GL11.GL_FLOAT, false, SIZE_IN_BYTES, 
+                ELEMENT_BYTES * 4);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
          
 
@@ -226,7 +151,6 @@ public class GLView {
         
         A.FRAGMENT_SHADER_ID = GLUtil.glSetupShader(A.PROGRAM_ID, GLUtil.getResource("fragment.vsh"), GL20.GL_FRAGMENT_SHADER);
         A.VERTEX_SHADER_ID = GLUtil.glSetupShader(A.PROGRAM_ID, GLUtil.getResource("vertex.vsh"), GL20.GL_VERTEX_SHADER);
-        
 
         GL20.glBindAttribLocation(A.PROGRAM_ID, 0, "in_Position");
         GL20.glBindAttribLocation(A.PROGRAM_ID, 1, "in_Color");
@@ -242,6 +166,7 @@ public class GLView {
 
 	public void setPixels(int[][] data) {
 		this.pixels = data;
+		this.needsUpdate = true;
 	}
 
 }

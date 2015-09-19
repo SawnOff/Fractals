@@ -5,11 +5,13 @@ import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
 import static org.lwjgl.opengl.GL20.glAttachShader;
 import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.charset.Charset;
 
@@ -90,5 +92,50 @@ public class GLUtil {
     	buf.flip();
     	return buf;
     }
+    
+    public static int[][] randomColours(int width, int height) {
+    	int[][] i = new int[width][height];
+    	for(int x = 0; x < width; x++) {
+    		for(int y = 0; y < height; y++) {
+    			i[x][y] = new Color((float) Math.random(), (float) Math.random(), (float) Math.random()).getRGB();
+    		}
+    	}
+    	return i;
+    }
+    
+    public static FloatBuffer glCartesianBuffer(int[][] c, int elementCount) {
+    	FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(c.length * c[0].length * elementCount);
+    	
+    	float hh = (float) c[0].length / 2;
+    	float hw = (float) c.length / 2;
+    	
+    	for(float x = 0; x < c.length; x++) {
+    		for(float y = 0; y < c[0].length; y++) {
+    			glSetBuffer(x, y, hh, hw, c[(int) x][(int) y], verticesBuffer);
+    		}
+    	}
+    	
+    	verticesBuffer.flip();
+    	return verticesBuffer;
+    }
 
+    public static FloatBuffer glSetBuffer(float x, float y, float hh, float hw, int colour, FloatBuffer buffer) {
+    	float glX = 0.0f;
+		float glY = 0.0f;
+		
+		if(x > hw || x < hw) {
+			glX = (x - hw)/hw;
+		}
+		
+		if(y > hh || y < hh) {
+			glY = (y - hh)/hh;
+		}
+		
+		float[] xyzw = new float[] {glX, glY, 0.0f, 1.0f};
+    	float[] rgba = new float[]{(float) ((colour >> 16) & 0xFF/255),(float) ((colour >> 8) & 0xFF/255),(float) ((colour >> 0) & 0xFF/255),1f};
+    	
+    	buffer.put(xyzw);
+    	buffer.put(rgba);
+    	return buffer;
+    }
 }
