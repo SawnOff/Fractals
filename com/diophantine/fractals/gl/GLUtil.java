@@ -103,6 +103,16 @@ public class GLUtil {
     	return i;
     }
     
+    public static int[][] solidColour(int width, int height, int colour) {
+    	int[][] i = new int[width][height];
+    	for(int x = 0; x < width; x++) {
+    		for(int y = 0; y < height; y++) {
+    			i[x][y] = colour;
+    		}
+    	}
+    	return i;
+    }
+    
     public static FloatBuffer glCartesianBuffer(int[][] c, int elementCount) {
     	FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(c.length * c[0].length * elementCount);
     	
@@ -132,7 +142,11 @@ public class GLUtil {
 		}
 		
 		float[] xyzw = new float[] {glX, glY, 0.0f, 1.0f};
-    	float[] rgba = new float[]{(float) ((colour >> 16) & 0xFF/255),(float) ((colour >> 8) & 0xFF/255),(float) ((colour >> 0) & 0xFF/255),1f};
+		float r = (float) ((colour >> 16) & 0xFF)/255f;
+	    float g = (float) ((colour >> 8) & 0xFF)/255f;
+	    float b = (float) ((colour >> 0) & 0xFF)/255f;
+	    System.out.println(r + "," + g + "," + b);
+    	float[] rgba = new float[]{r,g,b,1f};
     	
     	buffer.put(xyzw);
     	buffer.put(rgba);

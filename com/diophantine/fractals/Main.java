@@ -1,5 +1,7 @@
 package com.diophantine.fractals;
 
+import java.awt.Color;
+
 import com.diophantine.fractals.gl.GLUtil;
 import com.diophantine.fractals.mandelbrot.MandelbrotSet;
 import com.diophantine.fractals.utilities.BinaryPoint;
@@ -7,8 +9,8 @@ import com.diophantine.fractals.utilities.BinaryPoint;
 public class Main {
 	
 	static MandelbrotSet m;
-	static int width = 320;
-	static int height = 320;
+	static int width = 640;
+	static int height = 640;
 	
     public static void main(String[] args) {
     	
@@ -26,7 +28,9 @@ public class Main {
         view.run(new Runnable() {
         	public void run() {
         		if(view.hasClicked) {
-        			view.updatePixels(GLUtil.randomColours(width, height));
+        			int colour = new Color((float) Math.random(), (float) Math.random(), (float) Math.random()).getRGB();
+        			System.out.println(Integer.toHexString(colour));
+        			view.updatePixels(GLUtil.solidColour(width, height, colour));
         		}
         		
         		/*
