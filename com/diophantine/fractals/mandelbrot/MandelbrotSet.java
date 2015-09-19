@@ -11,7 +11,7 @@ public class MandelbrotSet {
 	HashMap<String, Integer> pointMap;
 	static int maxColour = 33554431;
 	static double maxMod = 2;
-	static int maxIter = 1000;
+	static int maxIter = 600;
 	
 	ArrayList colours;
 	
@@ -101,7 +101,6 @@ public class MandelbrotSet {
 			// if the modulus is larger than maxMod than assume it's diverging
 			if (z.mod() > maxMod) {
 				value = (int) (((double) iter) * (((double) maxColour)/((double) maxIter)));
-				
 				if (!colours.contains(value)) colours.add(value);
 			}
 		}
