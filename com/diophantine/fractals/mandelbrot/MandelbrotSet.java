@@ -1,5 +1,6 @@
 package com.diophantine.fractals.mandelbrot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.diophantine.fractals.utilities.BinaryPoint;
@@ -12,11 +13,14 @@ public class MandelbrotSet {
 	static double maxMod = 2;
 	static int maxIter = 1000;
 	
+	ArrayList colours;
+	
 	private BinaryPoint b;
 	
 	public MandelbrotSet() {
 		pointMap = new HashMap<String, Integer>();
 		b = new BinaryPoint();
+		colours = new ArrayList();
 	}
 	
 	public void loadInRect(BinaryPoint point, int width, int height) {
@@ -41,7 +45,7 @@ public class MandelbrotSet {
 			}
 		}
 
-		System.out.println("Done");
+		System.out.println("Done " + colours.size());
 	}
 	
 	public int[][] getArrayInRect(BinaryPoint point, int width, int height) {
@@ -92,6 +96,7 @@ public class MandelbrotSet {
 			// if the modulus is larger than maxMod than assume it's diverging
 			if (z.mod() > maxMod) {
 				value = (int) (iter * (maxColour/((float) maxIter)));
+				if (!colours.contains(value)) colours.add(value);
 			}
 		}
 		
