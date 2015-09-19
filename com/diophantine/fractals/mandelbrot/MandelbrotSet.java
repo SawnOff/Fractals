@@ -12,7 +12,6 @@ public class MandelbrotSet {
 	static double maxMod = 2;
 	static int maxIter = 1000;
 	
-	private int level = 0;
 	private BinaryPoint b;
 	
 	public MandelbrotSet() {
@@ -127,12 +126,19 @@ public class MandelbrotSet {
 		return array;
 	}
 	
+	public BinaryPoint locationToBP(BinaryPoint b, int width, int height, int x, int y) {
+		if (x - width / 4 < 0) x = width / 4;
+		else if (x + width / 4 > width) x = width - width / 4;
+		
+		if (y - height / 4 < 0) x = height / 4;
+		else if (x + height / 4 > height) x = height - height / 4;
+		return b;
+		
+		
+	}
+	
 	// getters
 	public BinaryPoint getCorner() {
 		return b;
-	}
-	
-	public int getLevel () {
-		return level;
 	}
 }
