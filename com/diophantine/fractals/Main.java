@@ -6,18 +6,15 @@ import com.diophantine.fractals.utilities.BinaryPoint;
 public class Main {
 	
 	static MandelbrotSet m;
-	static int width = 640;
-	static int height = 640;
+	static int width = 320;
+	static int height = 320;
 	static BinaryPoint p;
 	
     public static void main(String[] args) {
     	
     	m = new MandelbrotSet();
-    	
-    	BinaryPoint b = new BinaryPoint(0b101, 0b100);
-    	System.out.println(b + " " + b.minPointLevel());
         
-        p = new BinaryPoint(-2.0, -1.5, 1, 1);
+        p = new BinaryPoint((-width/2)/100.0, (-height/2)/100, 1, 1);
         m.loadInRect(p, width, height);
     	
         View view = new View("Fractals", width, height);

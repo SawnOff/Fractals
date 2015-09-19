@@ -94,7 +94,7 @@ public class BinaryPoint {
 			}
 		}
 		
-		return baseX/Math.pow(10, baseDecLevel) + dec;
+		return baseX/Math.pow(10, baseDecLevel) + dec/Math.pow(10, baseDecLevel);
 	}
 	
 	// converts binary y to Cartesian y
@@ -107,7 +107,7 @@ public class BinaryPoint {
 			}
 		}
 		
-		return baseY/Math.pow(10, baseDecLevel) + dec;
+		return baseY/Math.pow(10, baseDecLevel) + dec/Math.pow(10, baseDecLevel);
 	}
 	
 	// adds to x along same level

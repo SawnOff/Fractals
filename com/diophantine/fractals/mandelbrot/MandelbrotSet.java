@@ -38,8 +38,9 @@ public class MandelbrotSet {
 			for (; loopPoint.lessThanY(boundPoint); 
 					loopPoint.addY(1)) {
 				// gets correct point level
-				BinaryPoint p = loopPoint;
-				p.setLevel(p.minPointLevel());
+				BinaryPoint p = loopPoint.copy();
+				//p.setLevel(p.minPointLevel());
+				
 				// calculates whether it's in the set
 				calculatePoint(p);
 			}
@@ -66,11 +67,16 @@ public class MandelbrotSet {
 			y = 0;
 			for (; y < height; 
 					loopPoint.addY(1)) {
-				if (!pointMap.containsKey(loopPoint.toString())) {
+				
+				BinaryPoint p = loopPoint.copy();
+				//p.setLevel(p.minPointLevel());
+				
+				if (!pointMap.containsKey(p.toString())) {
 					System.out.println("Whoops");
 				}
+				
 				// adds value to array
-				array[x][y] = pointMap.get(loopPoint.toString());
+				array[x][y] = pointMap.get(p.toString());
 				y++;
 			}
 			x++;
@@ -83,19 +89,19 @@ public class MandelbrotSet {
 	private void calculatePoint(BinaryPoint p) {
 		// checks if already loaded this point
 		if (pointMap.containsKey(p.toString())) return;
-		
 		Complex c = new Complex(p.cartX(), p.cartY());
 		Complex z = new Complex();
 		
 		int value = 0;
-		
+		//if (p.cartX() > -1) value = 1000;
 		// iterates through z(n+1) = zn^2 + c with z0 = z
 		// stops iterating after max iterations and assumes it's converging
 		for (int iter = 0; iter <= maxIter; iter++) {
 			z = z.pow(2).add(c);
 			// if the modulus is larger than maxMod than assume it's diverging
 			if (z.mod() > maxMod) {
-				value = (int) (iter * (maxColour/((float) maxIter)));
+				value = (int) (((double) iter) * (((double) maxColour)/((double) maxIter)));
+				
 				if (!colours.contains(value)) colours.add(value);
 			}
 		}
@@ -104,45 +110,21 @@ public class MandelbrotSet {
 		pointMap.put(p.toString(), value);
 	}
 	
-	public int[][] mandelbrotTest(BinaryPoint point, int width, int height) {
-		int[][] array = new int[width][height];
-		
-		for (double x = 0; x < width/100.0; x += 0.01) {
-			for (double y = 0; y < height/100.0; y += 0.01) {
-				Complex base = new Complex(point.cartX() + x, point.cartY() + y);
-				Complex z = new Complex();
-				
-				array[(int) (x*100)][(int) (y*100)] = 0;
-				
-				// iterates through z(n+1) = zn^2 + c with z0 = z
-				// stops iterating after max iterations and assumes it's converging
-				for (int iter = 0; iter <= maxIter; iter++) {
-					z = z.pow(2).add(base);
-					// if the modulus is larger than maxMod than assume it's diverging
-					if (z.mod() > maxMod) {
-						//value = (int) (Math.random() * maxColour);
-						array[(int) (x*100)][(int) (y*100)] = (int) (iter * (maxColour/((float) maxIter)));
-						//value = 13000;
-					}
-				}
-			}
-		}
-		
-		return array;
-	}
-	
 	public BinaryPoint clickToZoomPoint(BinaryPoint point, int width, int height, int x, int y) {
+		System.out.println(x + " " + y);
 		BinaryPoint b = point.copy();
 		if (x - width / 4 < 0) x = width / 4;
 		else if (x + width / 4 > width) x = width - width / 4;
+		else x -= width / 4;
 		
-		if (y - height / 4 < 0) x = height / 4;
-		else if (x + height / 4 > height) x = height - height / 4;
+		if (y - height / 4 < 0) y = height / 4;
+		else if (y + height / 4 > height) y = height - height / 4;
+		else y -= height / 4;
 		
 		b.addX(x);
 		b.addY(y);
 		
-		b.setLevel(b.minPointLevel() + 1);
+		b.setLevel(b.maxPointLevel() + 1);
 		
 		return b;
 	}
