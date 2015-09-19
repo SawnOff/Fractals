@@ -1,8 +1,5 @@
 package com.diophantine.fractals;
 
-import java.awt.Color;
-
-import com.diophantine.fractals.gl.GLUtil;
 import com.diophantine.fractals.mandelbrot.MandelbrotSet;
 import com.diophantine.fractals.utilities.BinaryPoint;
 
