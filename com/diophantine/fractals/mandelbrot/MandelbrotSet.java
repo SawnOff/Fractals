@@ -132,7 +132,6 @@ public class MandelbrotSet {
 		
 		if (y - height / 4 < 0) x = height / 4;
 		else if (x + height / 4 > height) x = height - height / 4;
-		return b;
 		
 		
 	}
