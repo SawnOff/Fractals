@@ -11,7 +11,6 @@ public class MandelbrotSet {
 	static int maxColour = 33554431;
 	static double maxMod = 2;
 	static int maxIter = 1000;
-	static double c = 1;
 	
 	private int level = 0;
 	private BinaryPoint b;
@@ -82,8 +81,8 @@ public class MandelbrotSet {
 		// checks if already loaded this point
 		if (pointMap.containsKey(p.toString())) return;
 		
-		Complex z = new Complex(p.cartX(), p.cartY());
-		//System.out.println(z);
+		Complex c = new Complex(p.cartX(), p.cartY());
+		Complex z = new Complex();
 		
 		int value = 0;
 		

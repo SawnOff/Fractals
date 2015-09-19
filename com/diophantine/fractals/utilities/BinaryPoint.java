@@ -213,13 +213,13 @@ public class BinaryPoint {
 		return b;
 	}
 	
-	private static String longToString(long l) {
-		String s;
+	//private static String longToString(long l) {
+		//String s;
 		//String lString = Integer.parseInt(Long.toBinaryString(l), 2);
 		
 		//s += lString.subSequence(0, 7);
-		return null;
-	}
+		//return null;
+	//}
 	
 	// copier
 	public BinaryPoint copy() {
