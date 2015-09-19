@@ -128,7 +128,7 @@ public class GLUtil {
     	verticesBuffer.flip();
     	return verticesBuffer;
     }
-
+    
     public static FloatBuffer glSetBuffer(float x, float y, float hh, float hw, int colour, FloatBuffer buffer) {
     	float glX = 0.0f;
 		float glY = 0.0f;
@@ -145,7 +145,6 @@ public class GLUtil {
 		float r = (float) ((colour >> 16) & 0xFF)/255f;
 	    float g = (float) ((colour >> 8) & 0xFF)/255f;
 	    float b = (float) ((colour >> 0) & 0xFF)/255f;
-	    System.out.println(r + "," + g + "," + b);
     	float[] rgba = new float[]{r,g,b,1f};
     	
     	buffer.put(xyzw);
