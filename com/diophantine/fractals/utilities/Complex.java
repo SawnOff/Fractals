@@ -78,7 +78,7 @@ public class Complex {
 	
 	// returns the complex modulus
 	public double mod() {
-		float mod = (float) Math.sqrt(Math.pow(r, 2) + Math.pow(i, 2));
+		double mod = Math.sqrt(Math.pow(r, 2) + Math.pow(i, 2));
 		return mod;
 	}
 	

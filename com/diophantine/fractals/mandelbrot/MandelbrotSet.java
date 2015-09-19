@@ -9,8 +9,9 @@ public class MandelbrotSet {
 	
 	HashMap<String, Integer> pointMap;
 	static int maxColour = 33554431;
-	static int maxMod = 1000;
+	static double maxMod = 2;
 	static int maxIter = 1000;
+	static double c = 1;
 	
 	private int level = 0;
 	private BinaryPoint b;
@@ -80,8 +81,7 @@ public class MandelbrotSet {
 	private void calculatePoint(BinaryPoint p) {
 		// checks if already loaded this point
 		if (pointMap.containsKey(p.toString())) return;
-
-		float c = 1;
+		
 		Complex z = new Complex(p.cartX(), p.cartY());
 		//System.out.println(z);
 		
@@ -92,15 +92,40 @@ public class MandelbrotSet {
 		for (int iter = 0; iter <= maxIter; iter++) {
 			z = z.pow(2).add(c);
 			// if the modulus is larger than maxMod than assume it's diverging
-			if (z.mod() < maxMod) {
-				//value = (int) (Math.random() * maxColour);
+			if (z.mod() > maxMod) {
 				value = (int) (iter * (maxColour/((float) maxIter)));
-				//value = 13000;
 			}
 		}
 		
 		// adds point to map
 		pointMap.put(p.toString(), value);
+	}
+	
+	public int[][] mandelbrotTest(BinaryPoint point, int width, int height) {
+		int[][] array = new int[width][height];
+		
+		for (double x = 0; x < width/100.0; x += 0.01) {
+			for (double y = 0; y < height/100.0; y += 0.01) {
+				Complex base = new Complex(point.cartX() + x, point.cartY() + y);
+				Complex z = new Complex();
+				
+				array[(int) (x*100)][(int) (y*100)] = 0;
+				
+				// iterates through z(n+1) = zn^2 + c with z0 = z
+				// stops iterating after max iterations and assumes it's converging
+				for (int iter = 0; iter <= maxIter; iter++) {
+					z = z.pow(2).add(base);
+					// if the modulus is larger than maxMod than assume it's diverging
+					if (z.mod() > maxMod) {
+						//value = (int) (Math.random() * maxColour);
+						array[(int) (x*100)][(int) (y*100)] = (int) (iter * (maxColour/((float) maxIter)));
+						//value = 13000;
+					}
+				}
+			}
+		}
+		
+		return array;
 	}
 	
 	// getters
