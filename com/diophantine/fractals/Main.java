@@ -19,7 +19,7 @@ public class Main {
     	
         View view = new View("Fractals", width, height);
         view.updatePixels(m.getArrayInRect(p, width, height));
-        //view.updatePixels(m.mandelbrotTest(p, width, height));
+        //view.updatePixels(m.colourTest(p, width, height));
         
         view.run(new Runnable() {
         	public void run() {
@@ -27,7 +27,7 @@ public class Main {
         			/*int colour = new Color((float) Math.random(), (float) Math.random(), (float) Math.random()).getRGB();
         			System.out.println(Integer.toHexString(colour));
         			view.updatePixels(GLUtil.solidColour(width, height, colour));*/
-        			p = m.clickToZoomPoint(p, width, height, view.clickX, view.clickY);
+        			p = m.clickToZoomPoint(p, width, height, view.clickX, view.clickY, false);
         			m.loadInRect(p, width, height);
         			view.updatePixels(m.getArrayInRect(p, width, height));
         		}

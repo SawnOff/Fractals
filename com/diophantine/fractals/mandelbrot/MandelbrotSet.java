@@ -9,17 +9,14 @@ import com.diophantine.fractals.utilities.Complex;
 public class MandelbrotSet {
 	
 	HashMap<String, Integer> pointMap;
-	static int maxColour = 33554431;
+	static double maxColour = 16777215;
 	static double maxMod = 2;
 	static int maxIter = 500;
 	
 	ArrayList colours;
 	
-	private BinaryPoint b;
-	
 	public MandelbrotSet() {
 		pointMap = new HashMap<String, Integer>();
-		b = new BinaryPoint();
 		colours = new ArrayList();
 	}
 	
@@ -100,7 +97,8 @@ public class MandelbrotSet {
 			z = z.pow(2).add(c);
 			// if the modulus is larger than maxMod than assume it's diverging
 			if (z.mod() > maxMod) {
-				value = (int) ((maxIter - iter) * (((double) maxColour)/((double) maxIter)));
+				value = colour(iter);
+				//value = (int) ((maxIter - iter) * (((double) maxColour)/((double) maxIter)));
 				if (!colours.contains(value)) colours.add(value);
 			}
 		}
@@ -109,16 +107,21 @@ public class MandelbrotSet {
 		pointMap.put(p.toString(), value);
 	}
 	
-	public BinaryPoint clickToZoomPoint(BinaryPoint point, int width, int height, int x, int y) {
+	public BinaryPoint clickToZoomPoint(BinaryPoint point, int width, int height, int x, int y, boolean bound) {
 		System.out.println(x + " " + y);
 		BinaryPoint b = point.copy();
-		if (x - width / 4 < 0) x = width / 4;
-		else if (x + width / 4 > width) x = width - width / 4;
-		else x -= width / 4;
-		
-		if (y - height / 4 < 0) y = height / 4;
-		else if (y + height / 4 > height) y = height - height / 4;
-		else y -= height / 4;
+		if (bound) {
+			if (x - width / 4 < 0) x = width / 4;
+			else if (x + width / 4 > width) x = width - width / 4;
+			else x -= width / 4;
+			
+			if (y - height / 4 < 0) y = height / 4;
+			else if (y + height / 4 > height) y = height - height / 4;
+			else y -= height / 4;
+		} else {
+			y -= height / 4;
+			x -= height / 4;
+		}
 		
 		b.addX(x);
 		b.addY(y);
@@ -128,8 +131,45 @@ public class MandelbrotSet {
 		return b;
 	}
 	
-	// getters
-	public BinaryPoint getCorner() {
-		return b;
+	public int[][] colourTest(BinaryPoint point, int width, int height) {
+		int[][] array = new int[width][height];
+		
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				array[x][y] = (int) ((y*maxColour)/height);
+			}
+		}
+		
+		return array;
+	}
+	
+	public int colour(int iter) {
+		int colour = 0;
+		
+		// calculates red
+		int red = 0;
+		if (iter < maxIter/3.0) {
+			red = (int) ((-Math.pow(iter/(maxIter/3.0), 2) + 1) * (maxIter/3.0));
+		} else if (iter > 2*maxIter/3) {
+			red = (int) ((-Math.pow((iter - maxIter)/(maxIter/3.0), 2) + 1) * (maxIter/3.0));
+		}
+		
+		// calculates blue
+		int blue = 0;
+		if (iter < 2*maxIter/3.0) {
+			blue = (int) ((-Math.pow((iter - maxIter/3.0)/(maxIter/3.0), 2) + 1) * (maxIter/3.0));
+		}
+		
+		// calculates blue
+		int green = 0;
+		if (iter > maxIter/3.0) {
+			green = (int) ((-Math.pow((iter - 2*maxIter/3.0)/(maxIter/3.0), 2) + 1) * (maxIter/3.0));
+		}
+		
+		colour += (red << 16);
+		colour += (blue << 8);
+		colour += green;
+		
+		return colour;
 	}
 }
