@@ -1,8 +1,10 @@
 package com.diophantine.fractals.mandelbrot;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.diophantine.fractals.utilities.BigComplex;
 import com.diophantine.fractals.utilities.BinaryPoint;
 import com.diophantine.fractals.utilities.Complex;
 
@@ -10,7 +12,7 @@ public class MandelbrotSet {
 	
 	HashMap<String, Integer> pointMap;
 	static double maxColour = 16777215;
-	static double maxMod = 2;
+	static double maxMod = 4;
 	static int maxIter = 500;
 	
 	ArrayList colours;
@@ -37,7 +39,6 @@ public class MandelbrotSet {
 				// gets correct point level
 				BinaryPoint p = loopPoint.copy();
 				p.setLevel(p.minPointLevel());
-				
 				// calculates whether it's in the set
 				calculatePoint(p);
 			}
@@ -86,20 +87,52 @@ public class MandelbrotSet {
 	private void calculatePoint(BinaryPoint p) {
 		// checks if already loaded this point
 		if (pointMap.containsKey(p.toString())) return;
-		Complex c = new Complex(p.cartX(), p.cartY());
-		Complex z = new Complex();
+		BigComplex c = new BigComplex(p.cartX(), p.cartY());
+		BigComplex z = new BigComplex();
 		
 		int value = 0;
 		
 		// iterates through z(n+1) = zn^2 + c with z0 = z
 		// stops iterating after max iterations and assumes it's converging
 		for (int iter = 0; iter <= maxIter; iter++) {
+			
 			z = z.pow(2).add(c);
+			if (z.maxScale() > 100) z.setPrecision(100);
 			// if the modulus is larger than maxMod than assume it's diverging
-			if (z.mod() > maxMod) {
+			//BigDecimal compare = z.mod().subtract(BigDecimal.valueOf(maxMod));
+			if (z.modSqrd() > maxMod/(p.minPointLevel() + 1)) {
 				value = colour(iter);
 				//value = (int) ((maxIter - iter) * (((double) maxColour)/((double) maxIter)));
 				if (!colours.contains(value)) colours.add(value);
+				break;
+			}
+		}
+		
+		// adds point to map
+		pointMap.put(p.toString(), value);
+	}
+	
+	private void calculatePointBin(BinaryPoint p) {
+		// checks if already loaded this point
+		if (pointMap.containsKey(p.toString())) return;
+		BigComplex c = new BigComplex(p.cartX(), p.cartY());
+		BigComplex z = new BigComplex();
+		
+		int value = 0;
+		
+		// iterates through z(n+1) = zn^2 + c with z0 = z
+		// stops iterating after max iterations and assumes it's converging
+		for (int iter = 0; iter <= maxIter; iter++) {
+			
+			z = z.pow(2).add(c);
+			if (z.maxScale() > 100) z.setPrecision(100);
+			// if the modulus is larger than maxMod than assume it's diverging
+			//BigDecimal compare = z.mod().subtract(BigDecimal.valueOf(maxMod));
+			if (z.modSqrd() > maxMod/(p.minPointLevel() + 1)) {
+				value = colour(iter);
+				//value = (int) ((maxIter - iter) * (((double) maxColour)/((double) maxIter)));
+				if (!colours.contains(value)) colours.add(value);
+				break;
 			}
 		}
 		

@@ -1,6 +1,8 @@
 package com.diophantine.fractals.utilities;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 public class BigComplex {
 	
@@ -79,9 +81,18 @@ public class BigComplex {
 	}
 	
 	// returns the complex modulus
-	public BigDecimal mod() {
-		BigDecimal mod = sqrtNewtonRaphson(r.multiply(r).add(i.multiply(i)));
-		return mod;
+	public double modSqrd() {
+		//BigDecimal mod = sqrtNewtonRaphson(r.multiply(r).add(i.multiply(i)), 5);
+		double rd;
+		double id;
+		if (r.compareTo(BigDecimal.ZERO) < 0) rd = r.negate().doubleValue();
+		else rd = r.doubleValue();
+		if (i.compareTo(BigDecimal.ZERO) < 0) id = i.negate().doubleValue();
+		else id = i.doubleValue();
+		
+		double modSqrd = rd*rd + id*id;
+		
+		return modSqrd;
 	}
 	
 	// for test purposes
@@ -89,16 +100,38 @@ public class BigComplex {
 		return r + " + " + i + " i";
 	}
 	
-	private BigDecimal sqrtNewtonRaphson(BigDecimal x) {
+	/*private BigDecimal sqrtNewtonRaphson(BigDecimal x, int maxIter) {
 		BigDecimal n = BigDecimal.ONE;
 		BigDecimal d;
-		
-		for (int iter = 0; iter < 10; iter++) {
+		for (int iter = 0; iter < maxIter; iter++) {
 			n = n.multiply(n).subtract(x);
 			d = n.multiply(BigDecimal.valueOf(2));
+
 			n = n.divide(d);
 		}
 		
 		return n;
+	}*/
+	
+	private double sqrtNewtonRaphson(double x, int maxIter) {
+		double n = 1;
+		double d;
+		for (int iter = 0; iter < maxIter; iter++) {
+			n = n*n - x;
+			d = 2*n;
+
+			n = n/d;
+		}
+		
+		return n;
+	}
+	
+	public void setPrecision(int precision) {
+		r = r.setScale(precision, RoundingMode.HALF_UP);
+		i = i.setScale(precision, RoundingMode.HALF_UP);
+	}
+	
+	public int maxScale() {
+		return r.scale() > i.scale() ? r.scale() : i.scale();
 	}
 }
