@@ -14,6 +14,10 @@ public class BinaryDec {
 		this.s = s;
 	}
 	
+	public BinaryDec(String s) {
+		this.s = s;
+	}
+	
 	public BinaryDec add(BinaryDec d) {
 		String b;
 		String s;
@@ -60,24 +64,23 @@ public class BinaryDec {
 	
 	public BinaryDec subtract(BinaryDec d) {
 		String r = "";
-		
+
 		BinaryDec a = this.copy();
 		BinaryDec b = d.copy();
-		
+		a.setLevel(a.minLevel());
+		b.setLevel(b.minLevel());
 		if (a.s.length() > b.s.length()) b.setLevel(a.s.length() - 1);
 		else if (a.s.length() < b.s.length()) a.setLevel(b.s.length() - 1);
 		
 		char carry = '0';
 		for (int x = a.length() - 1 ; x >= 0; x--) {
 			String tri = "" + a.s.charAt(x) + b.s.charAt(x) + carry;
-			System.out.println(tri +  " " + a + " " + b + " " + r);
 			
 			if (tri.equals("000")) r = '0' + r;
 			else if (tri.equals("001")) r = '1' + r;
 			else if (tri.equals("010")) {
 				r = '1' + r;
 				carry = '1';
-				System.out.println("1");
 			} else if (tri.equals("011")) r = '0' + r;
 			else if (tri.equals("100")) r = '1' + r;
 			else if (tri.equals("101")) {
@@ -104,32 +107,34 @@ public class BinaryDec {
 			b = d.s;
 			s = this.s;
 		}
-		
 		String[] ra = new String[s.length()];
 		
-		for (int x = s.length() - 1; x >= 0; x--) {
-			if (s.charAt(x) == '1') {
-				ra[x] = b;
-				for (int y = x; y >= 0; y--) {
-					ra[x] = '0' + ra[x];
-				}
-			} else ra[x] = "0";
+		if (b.length() != 0 && s.length() != 0) {
+			for (int x = s.length() - 1; x >= 0; x--) {
+				if (s.charAt(x) == '1') {
+					
+					ra[x] = b;
+					for (int y = x; y >= 0; y--) {
+						ra[x] = '0' + ra[x];
+					}
+				} else ra[x] = "0";
+			}
 		}
+		BinaryDec r = new BinaryDec((short) (this.base * d.base), ra.length != 0 ? ra[ra.length - 1] : "");
 		
-		BinaryDec r = new BinaryDec((short) (this.base * d.base), ra[ra.length - 1]);
-		r.add(this.multiply(d.base));
-		r.add(d.multiply(this.base));
-		System.out.println(r);
 		for (int x = s.length() - 2; x >= 0; x--) {
-			System.out.println(ra[x]);
 			if (ra[x] != "0") r = r.add(new BinaryDec((short) 0, ra[x]));
 		}
 		
+		r = r.add(new BinaryDec(this.s).multiply(d.base));
+		r = r.add(new BinaryDec(d.s).multiply(this.base));
+
 		return r;
 	}
 	
 	public BinaryDec multiply(int i) {
 		BinaryDec r = this.copy();
+		if (i == 0) return new BinaryDec();
 		for (int x = 2; x <= i; x++) {
 			r = r.add(this);
 		}
@@ -138,16 +143,17 @@ public class BinaryDec {
 	}
 	
 	public void setLevel(int level) {
-		if (s.length() - 1 > level) s = s.substring(0, level + 1);
+		if (level < 0) s = "";
+		else if (s.length() - 1 > level) s = s.substring(0, level + 1);
 		else if (s.length() - 1 < level) {
-			for (int x = level - (s.length() - 1); x > 0; x++) {
+			for (int x = level - (s.length() - 1); x > 0; x--) {
 				s += '0';
 			}
 		}
 	}
 	
 	public int minLevel() {
-		return s.lastIndexOf('1');
+		return s.lastIndexOf('1') > 0 ? s.lastIndexOf('1') : 0;
 	}
 	
 	public int length() {
@@ -155,7 +161,7 @@ public class BinaryDec {
 	}
 	
 	public String toString() {
-		return s;
+		return String.valueOf(toDec());
 	}
 	
 	public BinaryDec copy() {
@@ -168,5 +174,11 @@ public class BinaryDec {
 			if (s.charAt(x) == '1') dec += Math.pow(0.5, x + 1);
 		}
 		return dec + base;
+	}
+	
+	public boolean lessThan(BinaryDec b) {
+		BinaryDec c = subtract(b);
+		if (c.base < 0) return true;
+		else return false;
 	}
 }

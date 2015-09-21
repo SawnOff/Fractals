@@ -1,25 +1,27 @@
 package com.diophantine.fractals.mandelbrot;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.diophantine.fractals.utilities.BigComplex;
+import com.diophantine.fractals.utilities.BinaryComplex;
+import com.diophantine.fractals.utilities.BinaryDec;
 import com.diophantine.fractals.utilities.BinaryPoint;
-import com.diophantine.fractals.utilities.Complex;
 
 public class MandelbrotSet {
 	
 	HashMap<String, Integer> pointMap;
 	static double maxColour = 16777215;
-	static double maxMod = 4;
+	static int maxMod = 4;
+	BinaryDec maxModBin;
 	static int maxIter = 500;
 	
-	ArrayList colours;
+	ArrayList<Integer> colours;
 	
 	public MandelbrotSet() {
 		pointMap = new HashMap<String, Integer>();
-		colours = new ArrayList();
+		colours = new ArrayList<Integer>();
+		maxModBin = new BinaryDec((short) maxMod, "");
 	}
 	
 	public void loadInRect(BinaryPoint point, int width, int height) {
@@ -27,18 +29,18 @@ public class MandelbrotSet {
 		BinaryPoint boundPoint = point.copy();
 		boundPoint.addX(width);
 		boundPoint.addY(height);
+		System.out.println(boundPoint);
 		
 		System.out.println("About to load " + width*height + " points.");
 		// goes through every point in rect on level
-		for (BinaryPoint loopPoint = point.copy(); loopPoint.lessThanX(boundPoint); 
-				loopPoint.addX(1)) {
+		for (BinaryPoint lp = point.copy(); lp.x.lessThan(boundPoint.x); 
+				lp.add1X()) {
+			System.out.println("starting y loop");
 			//System.out.println(loopPoint + " " + boundPoint + " " + loopPoint.lessThanX(boundPoint));
-			loopPoint.setBase(loopPoint.baseX(), point.baseY());
-			for (; loopPoint.lessThanY(boundPoint); 
-					loopPoint.addY(1)) {
+			for (lp.y = point.y.copy(); lp.y.lessThan(boundPoint.y); lp.add1Y()) {
 				// gets correct point level
-				BinaryPoint p = loopPoint.copy();
-				p.setLevel(p.minPointLevel());
+				BinaryPoint p = lp.copy();
+				//p.setLevel(p.minLevel());
 				// calculates whether it's in the set
 				calculatePoint(p);
 			}
@@ -53,25 +55,23 @@ public class MandelbrotSet {
 		BinaryPoint boundPoint = point.copy();
 		boundPoint.addX(width);
 		boundPoint.addY(height);
-		System.out.println(point + " " + boundPoint);
 		
 		int x = 0;
 		int y = 0;
 		
 		// goes through every point in rect on level
-		for (BinaryPoint loopPoint = point.copy(); x < width; 
-				loopPoint.addX(1)) {
-			loopPoint.setBase(loopPoint.baseX(), point.baseY());
+		for (BinaryPoint lp = point.copy(); x < width; 
+				lp.add1X()) {
 			y = 0;
-			for (; y < height; 
-					loopPoint.addY(1)) {
-				
-				BinaryPoint p = loopPoint.copy();
-				p.setLevel(p.minPointLevel());
+			for (lp.y = point.y.copy(); y < height; lp.add1Y()) {
+				BinaryPoint p = lp.copy();
+				p.setLevel(p.minLevel());
 				
 				if (!pointMap.containsKey(p.toString())) {
 					System.out.println("Whoops");
 				}
+				
+				//System.out.println(p);
 				
 				// adds value to array
 				array[x][y] = pointMap.get(p.toString());
@@ -84,56 +84,34 @@ public class MandelbrotSet {
 	}
 	
 	// calculates whether a point is in the mandelbrot set
-	private void calculatePoint(BinaryPoint p) {
+	public void calculatePoint(BinaryPoint p) {
+		
 		// checks if already loaded this point
 		if (pointMap.containsKey(p.toString())) return;
-		BigComplex c = new BigComplex(p.cartX(), p.cartY());
-		BigComplex z = new BigComplex();
-		
+
+		BinaryComplex c = new BinaryComplex(p.x, p.y);
+		BinaryComplex z = new BinaryComplex();
 		int value = 0;
 		
 		// iterates through z(n+1) = zn^2 + c with z0 = z
 		// stops iterating after max iterations and assumes it's converging
 		for (int iter = 0; iter <= maxIter; iter++) {
 			
-			z = z.pow(2).add(c);
-			if (z.maxScale() > 100) z.setPrecision(100);
+			z = z.multiply(z).add(c);
+			if (z.r.s.length() > p.x.s.length()*100 || z.i.s.length() > p.x.s.length()*2) z.setLevel(p.x.s.length()*2);
+			//System.out.println("z : " + z);
 			// if the modulus is larger than maxMod than assume it's diverging
 			//BigDecimal compare = z.mod().subtract(BigDecimal.valueOf(maxMod));
-			if (z.modSqrd() > maxMod/(p.minPointLevel() + 1)) {
-				value = colour(iter);
+			//System.out.println(z + " " + z.modSqrd());
+			if (!z.modSqrd().lessThan(maxModBin)) {
+			//if (p.x.base != 0) {
+				//value = colour(iter);
+				value = 100000;
 				//value = (int) ((maxIter - iter) * (((double) maxColour)/((double) maxIter)));
 				if (!colours.contains(value)) colours.add(value);
 				break;
 			}
-		}
-		
-		// adds point to map
-		pointMap.put(p.toString(), value);
-	}
-	
-	private void calculatePointBin(BinaryPoint p) {
-		// checks if already loaded this point
-		if (pointMap.containsKey(p.toString())) return;
-		BigComplex c = new BigComplex(p.cartX(), p.cartY());
-		BigComplex z = new BigComplex();
-		
-		int value = 0;
-		
-		// iterates through z(n+1) = zn^2 + c with z0 = z
-		// stops iterating after max iterations and assumes it's converging
-		for (int iter = 0; iter <= maxIter; iter++) {
-			
-			z = z.pow(2).add(c);
-			if (z.maxScale() > 100) z.setPrecision(100);
-			// if the modulus is larger than maxMod than assume it's diverging
-			//BigDecimal compare = z.mod().subtract(BigDecimal.valueOf(maxMod));
-			if (z.modSqrd() > maxMod/(p.minPointLevel() + 1)) {
-				value = colour(iter);
-				//value = (int) ((maxIter - iter) * (((double) maxColour)/((double) maxIter)));
-				if (!colours.contains(value)) colours.add(value);
-				break;
-			}
+			//break;
 		}
 		
 		// adds point to map
@@ -159,7 +137,7 @@ public class MandelbrotSet {
 		b.addX(x);
 		b.addY(y);
 		
-		b.setLevel(b.maxPointLevel() + 1);
+		//b.setLevel(b.maxPointLevel() + 1);
 		
 		return b;
 	}

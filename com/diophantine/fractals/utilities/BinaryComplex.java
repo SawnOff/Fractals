@@ -2,71 +2,42 @@ package com.diophantine.fractals.utilities;
 
 public class BinaryComplex {
 	
-	public double r;
-	public double i;
+	public BinaryDec r;
+	public BinaryDec i;
 	
 	// constructors
 	public BinaryComplex() {
-		r = 0;
-		i = 0;
+		r = new BinaryDec();
+		i = new BinaryDec();
 	}
 	
-	public BinaryComplex(double real, double imaginary) {
-		r = real;
-		i = imaginary;
+	public BinaryComplex(BinaryDec real, BinaryDec imaginary) {
+		r = real.copy();
+		i = imaginary.copy();
 	}
 	
-	// for neatness sake
-	public void set(double real, double imaginary) {
-		r = real;
-		i = imaginary;
-	}
-
 	// operations
 	public BinaryComplex add(BinaryComplex a) {
 		// adds each coefficient
-		BinaryComplex z = new BinaryComplex(a.r + r, a.i + i);
-		return z;
-	}
-	
-	public BinaryComplex add(double a) {
-		// adds each coefficient
-		BinaryComplex z = new BinaryComplex(a + r, i);
+		BinaryComplex z = new BinaryComplex(a.r.add(r), a.i.add(i));
 		return z;
 	}
 
 	public BinaryComplex subtract(BinaryComplex a) {
 		// subtracts each coefficient
-		BinaryComplex z = new BinaryComplex(a.r - r, a.i - i);
+		BinaryComplex z = new BinaryComplex(a.r.subtract(r), a.i.subtract(i));
 		return z;
 	}
 
 	public BinaryComplex multiply(BinaryComplex a) {
 		// multiplies each coefficient
-		BinaryComplex z = new BinaryComplex(a.r * r - a.i * i,
-				a.r * i + r * a.i);
-		return z;
-	}
-
-	public BinaryComplex divide(BinaryComplex a) {
-		BinaryComplex z;
-
-		// makes denominator real and divides coefficients
-		if (a.i != 0) {
-			// creates conjugate to create a real denominator
-			BinaryComplex conj = new BinaryComplex(a.r, -a.i);
-			z = this.multiply(conj).divide(a.multiply(conj));
-
-		} else {
-			// divides coefficients
-			z = new BinaryComplex(r / a.r, i / a.r);
-		}
-
+		BinaryComplex z = new BinaryComplex(a.r.multiply(r).subtract(a.i.multiply(i)),
+				a.r.multiply(i).add(r.multiply(a.i)));
 		return z;
 	}
 
 	public BinaryComplex pow(int exp) {
-		BinaryComplex z = this;
+		BinaryComplex z = this.copy();
 
 		// multiplies by itself exp - 1 number of times
 		for (int x = 2; x <= exp; x++) {
@@ -76,14 +47,21 @@ public class BinaryComplex {
 		return z;
 	}
 	
-	// returns the complex modulus
-	public double mod() {
-		double mod = Math.sqrt(Math.pow(r, 2) + Math.pow(i, 2));
-		return mod;
-	}
-	
 	// for test purposes
 	public String toString() {
 		return r + " + " + i + " i";
+	}
+	
+	public BinaryComplex copy() {
+		return new BinaryComplex(r, i);
+	}
+	
+	public BinaryDec modSqrd() {
+		return r.multiply(r).add(i.multiply(i));
+	}
+	
+	public void setLevel(int l) {
+		r.setLevel(l);
+		i.setLevel(l);
 	}
 }
