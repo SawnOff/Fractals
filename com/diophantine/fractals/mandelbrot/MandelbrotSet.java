@@ -14,7 +14,7 @@ public class MandelbrotSet {
 	static double maxColour = 16777215;
 	static int maxMod = 4;
 	BinaryDec maxModBin;
-	static int maxIter = 500;
+	static int maxIter = 100;
 	
 	ArrayList<Integer> colours;
 	
@@ -32,10 +32,14 @@ public class MandelbrotSet {
 		System.out.println(boundPoint);
 		
 		System.out.println("About to load " + width*height + " points.");
+		
 		// goes through every point in rect on level
+		int cum = 0;
 		for (BinaryPoint lp = point.copy(); lp.x.lessThan(boundPoint.x); 
 				lp.add1X()) {
-			System.out.println("starting y loop");
+
+			
+			System.out.print("\b\b\b\b" + ((int) (cum * 100 / (double) width)) + "% ");
 			//System.out.println(loopPoint + " " + boundPoint + " " + loopPoint.lessThanX(boundPoint));
 			for (lp.y = point.y.copy(); lp.y.lessThan(boundPoint.y); lp.add1Y()) {
 				// gets correct point level
@@ -44,6 +48,7 @@ public class MandelbrotSet {
 				// calculates whether it's in the set
 				calculatePoint(p);
 			}
+			cum++;
 		}
 
 		System.out.println("Done " + colours.size());
@@ -98,15 +103,15 @@ public class MandelbrotSet {
 		for (int iter = 0; iter <= maxIter; iter++) {
 			
 			z = z.multiply(z).add(c);
-			if (z.r.s.length() > p.x.s.length()*100 || z.i.s.length() > p.x.s.length()*2) z.setLevel(p.x.s.length()*2);
+			if (z.r.s.length() > p.x.s.length() || z.i.s.length() > p.x.s.length()) z.setLevel(p.x.s.length());
 			//System.out.println("z : " + z);
 			// if the modulus is larger than maxMod than assume it's diverging
 			//BigDecimal compare = z.mod().subtract(BigDecimal.valueOf(maxMod));
 			//System.out.println(z + " " + z.modSqrd());
 			if (!z.modSqrd().lessThan(maxModBin)) {
 			//if (p.x.base != 0) {
-				//value = colour(iter);
-				value = 100000;
+				value = colour(iter);
+				//value = 100000;
 				//value = (int) ((maxIter - iter) * (((double) maxColour)/((double) maxIter)));
 				if (!colours.contains(value)) colours.add(value);
 				break;
@@ -160,21 +165,21 @@ public class MandelbrotSet {
 		// calculates red
 		int red = 0;
 		if (iter < maxIter/3.0) {
-			red = (int) ((-Math.pow(iter/(maxIter/3.0), 2) + 1) * (maxIter/3.0));
+			red = (int) ((-Math.pow(iter/(maxIter/3.0), 2) + 1) * 255);
 		} else if (iter > 2*maxIter/3) {
-			red = (int) ((-Math.pow((iter - maxIter)/(maxIter/3.0), 2) + 1) * (maxIter/3.0));
+			red = (int) ((-Math.pow((iter - maxIter)/(maxIter/3.0), 2) + 1) * 255);
 		}
 		
 		// calculates blue
 		int blue = 0;
 		if (iter < 2*maxIter/3.0) {
-			blue = (int) ((-Math.pow((iter - maxIter/3.0)/(maxIter/3.0), 2) + 1) * (maxIter/3.0));
+			blue = (int) ((-Math.pow((iter - maxIter/3.0)/(maxIter/3.0), 2) + 1) * 255);
 		}
 		
 		// calculates blue
 		int green = 0;
 		if (iter > maxIter/3.0) {
-			green = (int) ((-Math.pow((iter - 2*maxIter/3.0)/(maxIter/3.0), 2) + 1) * (maxIter/3.0));
+			green = (int) ((-Math.pow((iter - 2*maxIter/3.0)/(maxIter/3.0), 2) + 1) * 255);
 		}
 		
 		colour += (red << 16);

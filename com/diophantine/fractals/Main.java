@@ -8,7 +8,7 @@ import com.diophantine.fractals.utilities.BinaryPoint;
 public class Main {
 	
 	static MandelbrotSet m;
-	static int width = 320;
+	static int width = 640;
 	static int height = 320;
 	static BinaryPoint p;
 	
@@ -16,20 +16,20 @@ public class Main {
     	
     	m = new MandelbrotSet();
     	
-    	/*BinaryDec b1 = new BinaryDec((short) 0, "1000");
-    	BinaryDec b2 = new BinaryDec((short) 0, "1000");
-    	System.out.println(b1.multiply(b1));
+    	BinaryDec b1 = new BinaryDec((short) 1, "101011");
+    	BinaryDec b2 = new BinaryDec((short) 2, "100011");
+    	//System.out.println(b1 + " " + b1.multiply(b1));
     	//System.out.println(b1.toDec() + " " + b2.toDec() + " " + b1.multiply(b1).add(b2).toDec() + " " + b1.multiply(b1).add(b2).s + " " + (b1.toDec()*b1.toDec() + b2.toDec()));
-    	//BinaryComplex bc = new BinaryComplex(b1, b2);
+    	BinaryComplex bc = new BinaryComplex(b1, b2);
     	//m.calculatePoint(bc);
-    	//System.out.println(bc + " " + bc.pow(2));
-    }
+    	System.out.println(bc + " " + bc.pow(2).add(bc) + " " + bc.pow(2).add(bc).modSqrd());
+    /*}
     
     public void lol() {*/
         
         //p = new BinaryPoint((-width/2)/100.0 - 1.0, (-height/3)/100, 1, 1);
-    	p = new BinaryPoint((short) -2
-    			, (short) -2, "000000", "000000");
+    	p = new BinaryPoint((short) -3
+    			, (short) -2, "1000000", "1000000");
         m.loadInRect(p, width, height);
     	
         View view = new View("Fractals", width, height);

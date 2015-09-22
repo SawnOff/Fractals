@@ -133,10 +133,19 @@ public class BinaryDec {
 	}
 	
 	public BinaryDec multiply(int i) {
-		BinaryDec r = this.copy();
+		BinaryDec r;
+
 		if (i == 0) return new BinaryDec();
-		for (int x = 2; x <= i; x++) {
-			r = r.add(this);
+		else if (i > 0) {
+			r = this.copy();
+			for (int x = 2; x <= i; x++) {
+				r = r.add(this);
+			}
+		} else {
+			r = new BinaryDec();
+			for (int x = -1; x >= i; x--) {
+				r = r.subtract(this);
+			}
 		}
 		
 		return r;

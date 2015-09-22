@@ -49,7 +49,7 @@ public class BinaryComplex {
 	
 	// for test purposes
 	public String toString() {
-		return r + " + " + i + " i";
+		return r + " + " + i + "i";
 	}
 	
 	public BinaryComplex copy() {
