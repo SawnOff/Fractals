@@ -14,7 +14,7 @@ public class MandelbrotSet {
 	static double maxColour = 16777215;
 	static int maxMod = 4;
 	BinaryDec maxModBin;
-	static int maxIter = 100;
+	static int maxIter = 500;
 	
 	ArrayList<Integer> colours;
 	
@@ -37,9 +37,8 @@ public class MandelbrotSet {
 		int cum = 0;
 		for (BinaryPoint lp = point.copy(); lp.x.lessThan(boundPoint.x); 
 				lp.add1X()) {
-
-			
 			System.out.print("\b\b\b\b" + ((int) (cum * 100 / (double) width)) + "% ");
+			
 			//System.out.println(loopPoint + " " + boundPoint + " " + loopPoint.lessThanX(boundPoint));
 			for (lp.y = point.y.copy(); lp.y.lessThan(boundPoint.y); lp.add1Y()) {
 				// gets correct point level
@@ -50,8 +49,9 @@ public class MandelbrotSet {
 			}
 			cum++;
 		}
+		
 
-		System.out.println("Done " + colours.size());
+		System.out.println("\b\b\b\b100% - Done");
 	}
 	
 	public int[][] getArrayInRect(BinaryPoint point, int width, int height) {

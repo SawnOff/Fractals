@@ -8,7 +8,7 @@ import com.diophantine.fractals.utilities.BinaryPoint;
 public class Main {
 	
 	static MandelbrotSet m;
-	static int width = 640;
+	static int width = 320;
 	static int height = 320;
 	static BinaryPoint p;
 	
