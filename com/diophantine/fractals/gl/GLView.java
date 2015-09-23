@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL20.glCreateProgram;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -89,8 +88,6 @@ public class GLView {
         Display.destroy();
 	}
 	
-	private ArrayList<String> check = new ArrayList<String>();
-	
 	private void cycle() {
 		if(needsUpdate) {
 			needsUpdate = false;
@@ -101,10 +98,6 @@ public class GLView {
 				for(float y = 0; y < A.HEIGHT; y++) {
 					FloatBuffer verFloatBuffer = vertexByteBuffer.asFloatBuffer();
 					verFloatBuffer.rewind();
-					
-					if(!check.contains(Integer.toHexString(pixels[(int) x][(int) y]))) {
-						check.add(Integer.toHexString(pixels[(int) x][(int) y]));
-					}
 
 					GLUtil.glSetBuffer(x, y, (float) A.HEIGHT / 2, (float) A.WIDTH / 2, pixels[(int) x][(int) y], verFloatBuffer);
 					verFloatBuffer.flip();
@@ -114,8 +107,6 @@ public class GLView {
 			}
 			
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-			//System.out.println(check.size() + " many colours");
-			//check.clear();
 		}
        
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
